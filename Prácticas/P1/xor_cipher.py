@@ -20,7 +20,4 @@ def decipher(criptotext):
     """
     return cipher(criptotext)
 
-if __name__ == "__main__":
-    print(cipher("Do not spill the beans"))
-    print(decipher("Do not spill the beans"))
 
