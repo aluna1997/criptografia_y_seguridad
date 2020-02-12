@@ -1,6 +1,3 @@
-from sympy.crypto.crypto import encipher_shift, decipher_shift
-
-
 class Caesar():
 
     def __init__(self, alphabet, key=None):
@@ -13,7 +10,10 @@ class Caesar():
                    None, se debe de escoger una llave aleatoria, válida.
         """
         self.alphabet = alphabet
-        self.key = key
+        if key:
+            self.key = key
+        else:
+            self.key = 1
         
 
     def cipher(self, message, flag=None):
@@ -23,15 +23,34 @@ class Caesar():
         Parámetro:
             message -- el mensaje a cifrar.
         """
-        res = ''
-        for c in message:
-            if flag:
+        res = ""
+        # Si la bandera es None, entonces no tomamos en cuenta los espacios
+        # al menos que sean parte del alfabeto
+        if not flag :
+            # Bandera auxiliar para saber si el caracter "espacio" es
+            # parte del alfabeto
+            if " " in self.alphabet:
+                flag_aux = True
+            else:
+                flag_aux = False
+            
+            for c in message:
+                # Si el mensaje contiene un espacio y no es parte del alfabeto
+                if c == " " and not flag_aux:
+                    # Lo ignoramos
+                    pass
+                else:
+                    # En otro caso aplicamos la sustitución correspondiente
+                    res += self.alphabet[(self.alphabet.index(c) + self.key) % len(self.alphabet)]
+            
+        # En otro caso dejamos los espacios en el mensaje
+        else:
+            for c in message:
                 if c == " ":
                     res += " "
                 else:
                     res += self.alphabet[(self.alphabet.index(c) + self.key) % len(self.alphabet)]
-            else:
-                res += self.alphabet[(self.alphabet.index(c) + self.key) % len(self.alphabet)]
+                
         return res
 
     def decipher(self, criptotext, flag=None):
@@ -43,11 +62,4 @@ class Caesar():
         """
         obj = Caesar(self.alphabet,-self.key)
         return obj.cipher(criptotext, flag)
-
-
-if __name__ == "__main__":
-    alphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ"
-    c1 = Caesar(alphabet, 1)
-    print(c1.cipher("UNMENSAJECONÑ"))
-    print(c1.decipher("VÑNFÑTBKFDPÑO"))
 
