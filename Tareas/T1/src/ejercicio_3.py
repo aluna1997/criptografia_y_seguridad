@@ -1,40 +1,17 @@
-'''
+"""
 Created on 9 feb. 2020
 
 @author: felipe, marco
-'''
+"""
 
-sustitucion = { "A":"N",
-               "B":"I",
-               "C":"B",
-               "D":"M",
-               "E":"",
-               "F":"",
-               "G":"E",
-               "H":"S",
-               "I":"R",
-               "J":"O",
-               "K":"Y",
-               "L":"T",
-               "M":"Q",
-               "N":"D",
-               "O":"V",
-               "P":"H",
-               "Q":"L",
-               "R":"A",
-               "S":"",
-               "T":"C",
-               "U":"X",
-               "V":"J",
-               "W":"F",
-               "X":"",
-               "Y":"U",
-               "Z":""}
+sustitucion = {"G": "E","I": "R","R": "A","D": "M","Y":"U","K":"Y",
+               "S":"G","B":"I","L":"T","J":"O","A":"N","P":"H","Q":"L", 
+               "Ñ":"P","N":"D","H":"S","O":"V","M":"Q","C":"B","T":"C",
+               "W":"F","U":"X","E":"Z","V":"J","X":"W","F":"K" }
 
-def descifra_texto(nombre_archivo):
-    archivo = open(nombre_archivo, "r")
-    for linea in archivo.readlines():
-        resultado = open("resultados/ejercicio3.txt","w")
+def ejercicio_3(nombre_archivo):
+    for linea in open(nombre_archivo, "r").readlines():
+        resultado = open("resultados/Ejercicio3.txt","w")
         for letra in linea:
             if letra not in sustitucion:
                 resultado.write(letra)
@@ -44,6 +21,6 @@ def descifra_texto(nombre_archivo):
             
 
 if __name__ == "__main__":
-    descifra_texto("recursos/texto.enc")
+    ejercicio_3("recursos/texto.enc")
                 
     
