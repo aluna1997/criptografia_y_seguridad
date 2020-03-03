@@ -1,5 +1,8 @@
+
 from sympy import Matrix
 from random import randint
+from utils import CryptographyException
+from math import sqrt
 class Hill():
 
     def __init__(self, alphabet, n, key=None):
@@ -12,16 +15,26 @@ class Hill():
         :param key: una cadena que corresponde a la llave, en caso de ser una llave inválida
         arrojar una CryptographyException.
         """
+        if key and len(key) != n:
+            raise CryptographyException
+        if str(sqrt(n)).split(".")[1] != "0":
+            raise CryptographyException 
         self.alphabet = alphabet
         self.n = n
         self.key = key
 
 
-    def map (self,text):
-        l = []
-        for char in text:
-           l.append(self.alphabet.index(char.upper()))
-        return l
+    def map(self,text, inverse=False):
+        if not inverse:
+            l = []
+            for char in text:
+                l.append(self.alphabet.index(char.upper()))
+            return l
+        else:
+            l = []
+            for char in text:
+                l.append(self.alphabet[int(char)])
+            return l 
 
     def cipher(self, message):
         """
@@ -36,16 +49,22 @@ class Hill():
             if len(l) != self.n:
                 for i in range(self.n - len(l)):
                     l.append(randint(0,self.n))
-            m = Matrix.ones(self.n,self.n)
-            m.row_insert(0,Matrix([l]))
+            m_ones = Matrix.ones(self.n - 1,self.n)
+            m_key = m_ones.row_insert(0,Matrix([l]))
         else:
-            l = []
+            l2 = []
             for i in range(self.n):
-                l.append(randint(0,self.n))
-
+                l = []
+                for j in range(self.n):
+                    l.append(randint(0,self.n))
+                l2.append(l)
+                
+            m_key = Matrix(l2)
         
-        print(m)
-
+        m_message = Matrix(self.map(message))
+        m_hill = (m_key * m_message) % len(self.alphabet)
+        print (list(m_hill))    
+        return self.map(list(m_hill),True) 
 
 
 
@@ -58,6 +77,5 @@ class Hill():
         """
 
 if __name__ == "__main__":
-    hill = Hill("ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",5,"abcde")
-    #print(hill.map("hola"))
-    hill.cipher("text")
+    hill = Hill("ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",4,"hola")
+    print(hill.cipher("text"))
