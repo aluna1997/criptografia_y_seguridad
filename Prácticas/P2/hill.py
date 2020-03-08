@@ -28,14 +28,16 @@ class Hill():
             middle = len(l) // 2
             m_key = Matrix([l[0:middle],l[middle:]])
         else:
-            l = []
-            for i in range(self.n):
-                l.append(randint(1,len(self.alphabet)))
-            middle = len(l) // 2
-            m_key = Matrix([l[0:middle],l[middle:]])
-            det = m_key.det()
-            if det == 0 or inverso_multilicativo(det,len(self.alphabet)) == 0:
-                raise CryptographyException
+            while True:
+                l = []
+                for i in range(self.n):
+                    l.append(randint(1,len(self.alphabet)))
+                middle = len(l) // 2
+                m_key = Matrix([l[0:middle],l[middle:]])
+                det = m_key.det()
+                detm = inverso_multilicativo(det,len(self.alphabet))
+                if det != 0 and  detm != 0:
+                    break
         self.m_key = m_key
     
     def map(self,text, inverse=False):
@@ -96,6 +98,13 @@ class Hill():
             print("Not")
         return msg
 
+if __name__ == "__main__":
+    alphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ"
+    key2 = "EBAY"
+    cipher = Hill(alphabet, 4)
+    c1 = cipher.cipher("UN MENSAJE CON Ñ")
+    result = cipher.decipher(c1)
+    print(result)
     
     
     
