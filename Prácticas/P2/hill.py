@@ -1,7 +1,8 @@
 
 from sympy import Matrix
+from scipy import linalg
 from random import randint
-from utils import CryptographyException
+from utils import CryptographyException,inverso_multilicativo
 from math import sqrt
 class Hill():
 
@@ -22,18 +23,35 @@ class Hill():
         self.alphabet = alphabet
         self.n = n
         self.key = key
-
-
+        if self.key:
+            l = self.map(self.key)
+            middle = len(l) // 2
+            m_key = Matrix([l[0:middle],l[middle:]])
+        else:
+            l = []
+            for i in range(self.n):
+                l.append(randint(1,len(self.alphabet)))
+            middle = len(l) // 2
+            m_key = Matrix([l[0:middle],l[middle:]])
+            det = m_key.det()
+            if det == 0 or inverso_multilicativo(det,len(self.alphabet)) == 0:
+                raise CryptographyException
+        self.m_key = m_key
+    
     def map(self,text, inverse=False):
+        """
+        Dado un texto regresa una lista con los índices correspondientes al 
+        alfabeto, y viceversa si la bandera inverse esta activa
+        """
         if not inverse:
             l = []
             for char in text:
                 l.append(self.alphabet.index(char.upper()))
             return l
         else:
-            l = []
+            l = ""
             for char in text:
-                l.append(self.alphabet[int(char)])
+                l += self.alphabet[int(char)]
             return l 
 
     def cipher(self, message):
@@ -44,29 +62,17 @@ class Hill():
         :return: Un criptotexto correspondiente al mensaje, este debe de estar en representación de
         cadena, no lista.
         """
-        if self.key:
-            l = self.map(self.key)
-            if len(l) != self.n:
-                for i in range(self.n - len(l)):
-                    l.append(randint(0,self.n))
-            m_ones = Matrix.ones(self.n - 1,self.n)
-            m_key = m_ones.row_insert(0,Matrix([l]))
-        else:
-            l2 = []
-            for i in range(self.n):
-                l = []
-                for j in range(self.n):
-                    l.append(randint(0,self.n))
-                l2.append(l)
-                
-            m_key = Matrix(l2)
-        
-        m_message = Matrix(self.map(message))
-        m_hill = (m_key * m_message) % len(self.alphabet)
-        print (list(m_hill))    
-        return self.map(list(m_hill),True) 
-
-
+        criptotext = ""
+        message_code = self.map(message.replace(" ",""))
+        if (len(message_code) % 2) != 0:
+            message_code += [0] 
+        aux = 0
+        for i in range(len(message_code) // 2):
+            hill = list((self.m_key * Matrix(message_code[aux:aux + 2])) % len(self.alphabet))
+            criptotext += self.map(hill,True)
+            aux += 2
+        return criptotext
+    
 
     def decipher(self, ciphered):
         """
@@ -75,7 +81,22 @@ class Hill():
         :param ciphered: El criptotexto de algún mensaje posible.
         :return: El texto plano correspondiente a manera de cadena.
         """
+        inv = inverso_multilicativo(self.m_key.det(),len(self.alphabet))
+        m_decipher = inv * self.m_key.adjugate() % len(self.alphabet)
+        print(m_decipher)
+        print(self.m_key)
+        ciphered_code = self.map(ciphered.replace(" ",""))
+        msg = ""
+        aux = 0
+        for i in range(len(ciphered) // 2):
+            hill = list((m_decipher * Matrix(ciphered_code[aux:aux + 2])) % len(self.alphabet))
+            msg += self.map(hill,True)
+            aux += 2
+        if msg != "UNMENSAJECONÑA":
+            print("Not")
+        return msg
 
-if __name__ == "__main__":
-    hill = Hill("ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",4,"hola")
-    print(hill.cipher("text"))
+    
+    
+    
+    
