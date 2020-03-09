@@ -1,9 +1,9 @@
 
 from sympy import Matrix
-from scipy import linalg
 from random import randint
 from utils import CryptographyException,inverso_multilicativo
 from math import sqrt
+
 class Hill():
 
     def __init__(self, alphabet, n, key=None):
@@ -18,7 +18,7 @@ class Hill():
         """
         if key and len(key) != n:
             raise CryptographyException
-        if str(sqrt(n)).split(".")[1] != "0":
+        if int(sqrt(n)) < (sqrt(n)):
             raise CryptographyException 
         self.alphabet = alphabet
         self.n = n
@@ -26,6 +26,7 @@ class Hill():
         if self.key:
             l = self.map(self.key)
             middle = len(l) // 2
+            print(l[0:middle],l[middle:])
             m_key = Matrix([l[0:middle],l[middle:]])
         else:
             while True:
@@ -94,18 +95,8 @@ class Hill():
             hill = list((m_decipher * Matrix(ciphered_code[aux:aux + 2])) % len(self.alphabet))
             msg += self.map(hill,True)
             aux += 2
-        if msg != "UNMENSAJECONÑA":
-            print("Not")
         return msg
 
-if __name__ == "__main__":
-    alphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ"
-    key2 = "EBAY"
-    cipher = Hill(alphabet, 4)
-    c1 = cipher.cipher("UN MENSAJE CON Ñ")
-    result = cipher.decipher(c1)
-    print(result)
-    
     
     
     

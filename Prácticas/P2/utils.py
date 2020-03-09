@@ -6,9 +6,9 @@ class CryptographyException(Exception):
     def __str__(self):
         return self.message
     
-def inverso_multilicativo(a,m):
-    for b in range(m):
-        x=(a*b)%m
-        if (x==1):
-            return b
+def inverso_multilicativo(num,len_alphabet):
+    for i in range(len_alphabet):
+        x = (num * i) % len_alphabet
+        if (x == 1):
+            return i
     return 0
