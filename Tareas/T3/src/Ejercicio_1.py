@@ -78,16 +78,19 @@ def rc4_algorithm(n):
 if __name__ == "__main__":
     
     # RADINT
+    print("RADINT")
     randint_algorithm(100)
     randint_algorithm(1000)
     randint_algorithm(10000)
     
     # URANDOM
+    print("URANDOM")
     urandom_algorithm(100)
     urandom_algorithm(1000)
     urandom_algorithm(10000)
     
     # RC4
+    print("RC4")
     rc4_algorithm(100)
     rc4_algorithm(1000)
     rc4_algorithm(10000)
