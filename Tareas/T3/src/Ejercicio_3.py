@@ -9,35 +9,43 @@ Created on 9 feb. 2020
 import array
 from RC4 import rc4_encrypt
 
+
+def bytes_to_int(bytes):
+    aux = []
+    for i in bytes:
+        aux.append(i)
+    return aux
+
+
+
 if __name__ == "__main__":
-    tarea_alicia = b"""No. de cuenta: 313204567
+    tarea_alicia = b"""No. de cuenta: 3132045673
                       Tarea 3
                       Respuestas...
                     """
+    
+    num_cta_carlos = b'3132030796'
     tarea_alicia_cifrada = rc4_encrypt(b'anitalavalatina',tarea_alicia)
-    tarea_alicia_cifrada_hex = tarea_alicia_cifrada.hex()
-    #print(tarea_alicia_cifrada_hex)
-    num_cta_carlos = b'313203079'
-    key_stream = tarea_alicia_cifrada[15:24]
     
-    #print(key_stream.hex())
+    num_cta_carlos_int = bytes_to_int(num_cta_carlos)
+    tarea_alicia_cifrada_int = bytes_to_int(tarea_alicia_cifrada)
+    flujo_aleatorio = []
+    for i in range(len(tarea_alicia_cifrada_int)):
+        flujo_aleatorio.append(tarea_alicia[i] ^ tarea_alicia_cifrada_int[i])
+        
+    
+    
     reemplazo = []
-    for i in range(9):
-        reemplazo.append(num_cta_carlos[i] ^ key_stream[i])
+    c = 15
+    for i in range(len(num_cta_carlos_int)):
+        reemplazo.append(num_cta_carlos_int[i] ^ flujo_aleatorio[c])
+        c += 1
+        
+    tarea_alicia_cifrada_int[15:25] = reemplazo
     
-    reemplazo = array.array('B',reemplazo).tostring()
-    
-    tarea_alicia_cifrada = bytearray(tarea_alicia_cifrada)
-    reemplazo = bytearray(reemplazo)
+    decrypt = rc4_encrypt(b'anitalavalatina',tarea_alicia_cifrada_int)
+    print(decrypt.decode("utf-8"))
 
-    tarea_alicia_cifrada[15:24] = reemplazo
-    
-    decrypted = rc4_encrypt(b'anitalavalatina', tarea_alicia_cifrada)
-    print(decrypted)
-    
-    
-    
-    
     
 
 
