@@ -1,0 +1,22 @@
+============================================================ RC4 ==========================================================================
+
+openssl enc -rc4 -base64 -e -in /E4_in.txt -out /E4_out.txt -k "Una llave muuy larga de 32 bytes"
+R = U2FsdGVkX1/BMU0zHrcSiyybZ8OFB/P2gKZ48XmdQu9h8X7t1UYCUwDLUQ==
+
+openssl enc -rc4 -base64 -e -in /E4_in.txt -out /E4_out.txt -k "00000000000000000000000000000000"
+R = U2FsdGVkX1/TJaTaEM8/dibGsAFNVLk/q5We2oQ=
+
+openssl enc -rc4 -base64 -e -in /E4_in.txt -out /E4_out.txt -k "Una llave muuy larga de 32 bytes"
+R= U2FsdGVkX1+jAq68XJnS3YxVOhbCzZjYQMymMVi7qHQEwA/fgxpXUlOq9nR4zuspfWWno7kI6g==
+
+
+============================================================== SHA SHA 20 ==================================================================
+openssl enc -iv 00000000000000000000000000000000 -chacha20 -base64 -e -in /E4_in.txt -out /E4_out.txt -k "Una llave muuy larga de 32 bytes"
+R = U2FsdGVkX19UYG5nPrLz32W7C8/MRMIxCUh4YP+oatJYUUjA8AKGTTaFqQ==
+
+openssl enc -iv 00000000000000000000000000000000 -chacha20 -base64 -e -in /E4_in.txt -out /E4_out.txt -k "00000000000000000000000000000000"
+R = U2FsdGVkX1/eHExKQlnfwmIWVR27eXebg2GO1p4=
+
+openssl enc -iv 00000000000000000000000000000000 -chacha20 -base64 -e -in /E4_in.txt -out /E4_out.txt -k "Una llave muuy larga de 32 bytes"
+R = U2FsdGVkX1/Agf9pWmnUAMRJtEZ88TY6IynqDV1JW5EjfSco/EP5cOeg6Bw3P5BqDtKmf+tQzw==
+
