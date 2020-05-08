@@ -26,3 +26,4 @@ class Participant():
         """
 
         s = (self.participant.s ** self.aleatorio) % self.p
+        return s
